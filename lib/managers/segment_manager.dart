@@ -12,17 +12,6 @@ class Block {
   final Vector2 gridPosition;
   final Type blockType;
   Block(this.gridPosition, this.blockType);
-
-  void loadSegment(int segmentIndex, double xPositionOffset) {
-    for (final block in segments[segmentIndex]) {
-      switch (block.blockType) {
-        case GroundBlock: break;
-        case PlatformBlock: break;
-        case Star: break;
-        case WaterEnemy: break;
-      }
-    }
-  }
 }
 
 // #region Segment
