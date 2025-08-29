@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:ember_quest/actors/ember.dart';
 import 'package:flame/components.dart';
@@ -13,7 +12,7 @@ import 'objects/ground_block.dart';
 import 'objects/platform_block.dart';
 import 'objects/star.dart';
 
-class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents {
+class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
   EmberQuestGame();
   late EmberPlayer _ember;
   double objectSpeed = 0.0;
@@ -80,7 +79,7 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents {
       loadSegment(i, (640 * i).toDouble());
     }
 
-    _ember = EmberPlayer(position: Vector2(128, canvasSize.y - 70));
+    _ember = EmberPlayer(position: Vector2(128, canvasSize.y - 128));
     world.add(_ember);
   }
 }
