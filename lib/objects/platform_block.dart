@@ -9,7 +9,7 @@ class PlatformBlock extends SpriteComponent with HasGameReference<EmberQuestGame
       : super(size: Vector2.all(64), anchor: Anchor.bottomLeft);
 
   final Vector2 gridPosition;
-  final xOffset;
+  double xOffset;
   final Vector2 velocity = Vector2.zero();
 
   @override
