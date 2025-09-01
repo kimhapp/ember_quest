@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ember_quest/actors/ember.dart';
+import 'package:ember_quest/hud.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -18,6 +19,9 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCol
   double objectSpeed = 0.0;
   late double lastBlockXPosition = 0.0;
   late UniqueKey lastBlockKey;
+
+  int starsCollected = 0;
+  int health = 3;
 
   @override
   Color backgroundColor() {
@@ -81,5 +85,6 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCol
 
     _ember = EmberPlayer(position: Vector2(128, canvasSize.y - 128));
     world.add(_ember);
+    camera.viewport.add(HUD());
   }
 }

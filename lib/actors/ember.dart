@@ -57,7 +57,10 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
       }
     }
 
-    if (other is Star) other.removeFromParent();
+    if (other is Star) {
+      other.removeFromParent();
+      game.starsCollected++;
+    }
 
     if (other is WaterEnemy) hit();
     super.onCollision(intersectionPoints, other);
@@ -107,6 +110,8 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
 
   void hit() {
     if (hitByEnemy) return;
+
+    game.health--;
     hitByEnemy = true;
 
     add(
