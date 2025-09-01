@@ -13,19 +13,21 @@ import 'package:flutter/services.dart';
 class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQuestGame>, KeyboardHandler, CollisionCallbacks {
   EmberPlayer({required super.position}) : super(size: Vector2.all(64), anchor: Anchor.center);
 
-  int horizontalDirection = 0;
   final Vector2 velocity = Vector2.zero();
   final double moveSpeed = 200;
   final Vector2 fromAbove = Vector2(0, -1);
-  bool isOnGround = false;
-  final double gravity = 15;
-  final double jumpSpeed = 600;
+  final double gravity = 9.8;
+  final double jumpSpeed = 650;
   final double terminalVelocity = 150;
+  int horizontalDirection = 0;
+
+  bool isOnGround = false;
   bool hasJumped = false;
   bool hitByEnemy = false;
 
   @override
   FutureOr<void> onLoad() {
+    debugMode = true;
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('ember.png'), SpriteAnimationData.sequenced(
         amount: 4, stepTime: 0.12, textureSize: Vector2.all(16))
@@ -75,13 +77,16 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
 
   @override
   void update(double dt) {
-    if (horizontalDirection < 0 && !isFlippedHorizontally) {
-      flipHorizontally();
-    } else if (horizontalDirection > 0 && isFlippedHorizontally) {
-      flipHorizontally();
-    }
+    velocity.x = horizontalDirection * moveSpeed;
+    game.objectSpeed = 0;
+    if (position.x - 36 <= 0 && horizontalDirection < 0) velocity.x = 0;
 
+    if (position.x + 64 >= game.size.x / 2 && horizontalDirection > 0) {
+      velocity.x = 0;
+      game.objectSpeed = -moveSpeed;
+    }
     velocity.y += gravity;
+
     if (hasJumped) {
       if (isOnGround) {
         velocity.y -= jumpSpeed;
@@ -89,20 +94,14 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
       }
       hasJumped = false;
     }
-
     velocity.y = velocity.y.clamp(-jumpSpeed, terminalVelocity);
-    velocity.x = horizontalDirection * moveSpeed;
-
-    game.objectSpeed = 0;
-
-    if (position.x - 36 <= 0 && horizontalDirection < 0) velocity.x = 0;
-
-    if (position.x + 64 >= game.size.x / 2 && horizontalDirection > 0) {
-      velocity.x = 0;
-      game.objectSpeed - moveSpeed;
-    }
-
     position += velocity * dt;
+
+    if (horizontalDirection < 0 && !isFlippedHorizontally) {
+      flipHorizontally();
+    } else if (horizontalDirection > 0 && isFlippedHorizontally) {
+      flipHorizontally();
+    }
     super.update(dt);
   }
 

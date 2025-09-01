@@ -14,6 +14,7 @@ class PlatformBlock extends SpriteComponent with HasGameReference<EmberQuestGame
 
   @override
   FutureOr<void> onLoad() {
+    debugMode = true;
     final platformImage = game.images.fromCache('block.png');
     sprite = Sprite(platformImage);
     position = Vector2(
