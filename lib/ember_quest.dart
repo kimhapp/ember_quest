@@ -15,7 +15,7 @@ import 'objects/star.dart';
 
 class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
   EmberQuestGame();
-  late EmberPlayer _ember;
+  late EmberPlayer ember;
   double objectSpeed = 0.0;
   late double lastBlockXPosition = 0.0;
   late UniqueKey lastBlockKey;
@@ -41,7 +41,12 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCol
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
-    initiateGame();
+  }
+
+  @override
+  void update(double dt) {
+    if (health <= 0) overlays.add('GameOver');
+    super.update(dt);
   }
 
   void loadSegment(int segmentIndex, double xPositionOffset) {
@@ -75,7 +80,7 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCol
     }
   }
 
-  void initiateGame() {
+  void initiateGame(bool loadHud) {
     final segmentsToLoad = (size.x / 640).ceil();
     segmentsToLoad.clamp(0, segments.length);
 
@@ -83,8 +88,17 @@ class EmberQuestGame extends FlameGame with HasKeyboardHandlerComponents, HasCol
       loadSegment(i, (640 * i).toDouble());
     }
 
-    _ember = EmberPlayer(position: Vector2(128, canvasSize.y - 128));
-    world.add(_ember);
-    camera.viewport.add(HUD());
+    ember = EmberPlayer(position: Vector2(128, canvasSize.y - 128));
+    add(ember);
+
+    if (loadHud) {
+      add(HUD());
+    }
+  }
+
+  void reset() {
+    starsCollected = 0;
+    health = 3;
+    initiateGame(false);
   }
 }

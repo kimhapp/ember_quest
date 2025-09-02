@@ -27,7 +27,6 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = true;
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('ember.png'), SpriteAnimationData.sequenced(
         amount: 4, stepTime: 0.12, textureSize: Vector2.all(16))
@@ -99,6 +98,10 @@ class EmberPlayer extends SpriteAnimationComponent with HasGameReference<EmberQu
     }
     velocity.y = velocity.y.clamp(-jumpSpeed, terminalVelocity);
     position += velocity * dt;
+
+    if (position.y > game.size.y + size.y) game.health = 0;
+
+    if (game.health <= 0) removeFromParent();
 
     if (horizontalDirection < 0 && !isFlippedHorizontally) {
       flipHorizontally();
